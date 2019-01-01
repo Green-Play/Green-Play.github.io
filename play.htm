@@ -1,0 +1,225 @@
+<html>
+<head>
+<title>Арканоид</title>
+<link type="image/png" rel="shortcut icon" href="images/iconH.png" />
+<a href="index.htm" Title="Главная" Target="_blank"><Img src="Сайт.jpg" Width="200" Height="150"></a>
+<body bgcolor="#000" background="Фон.jpg">
+<link href='style.css' rel='stylesheet' type='text/css'>
+<ul>
+        <li><a href="index.htm">Главная</a></li>
+        <li><a href="Игры.htm">Игры</a></li>
+        <li><a href="Комментарии.htm">Комментарии</a></li>
+        <li><a href="Пожертвовать.html">Пожертвовать</a></li>
+        <li><a href="О сайте.htm">О сайте</a></li>
+    </ul>
+    <ul class="icons">
+       <li><a href="https://vk.com/leoch3" class="icon alt fa-vk"><span class="label">VK GROUP</span></a></li>
+       <li><a href="http://vk.com/leoch2" class="icon alt fa-vk"><span class="label">VK DEVELOPER</span></a></li>
+        <li><a href="http://leoch2340@gmail.com" class="icon alt fa-gmail"><span class="label">ПОЧТА РАЗРАБОТЧИКА - leoch2340@gmail.com</span></a></li>
+</ul>
+					</nav>
+
+    <meta charset="utf-9" />
+    <title>Gamedev Canvas Workshop</title>
+    <style>
+    	* { padding: 0; margin: 0; }
+    	canvas { background: #eee; display: block; margin: 0 auto; }
+    </style>
+<p>&nbsp;<p>
+<center>
+<p style="font-size: 25;color: white;">                
+Игра "Арканоид" </p>
+</center>
+<p style="font-size: 25;color: white;">
+Как играть?</p>
+<p>&nbsp;<p>
+<p style="font-size: 20;color: black;">
+Чтобы победить вы должны сбить (попасть во) все платформы шариком. При попадании шариком по платформе она будет пропадать. После паподания шарик будет лететь назад к вашей платформе (которую вы управляете). Как управлять вашей платформой? Клавишами <b><img src="images/Квлево.png" width="25" height="25" alt="" /></b> - влево, <b><img src="images/Вправо.png" width="25" height="25" alt="" /></b> - вправо. Ещё можно управлять платформой мышкой. На телефоне управлять ею можно проводя пальцем по экрану.</p>
+<p>&nbsp;</p>
+</head>
+<body>
+ <canvas id="myCanvas" width="480" height="320"></canvas>
+  <script>
+ var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+var ballRadius = 10;  //ballRadius , которая будет содержать радиус нарисованного круга
+var x = canvas.width/2;
+var y = canvas.height-30;
+var dx = 2;
+var dy = -2;
+var paddleHeight = 10;
+var paddleWidth = 75;
+var paddleX = (canvas.width-paddleWidth)/2;
+
+var rightPressed = false;
+var leftPressed = false;
+
+//определили количество строк и столбцов из кирпича, их ширину и высоту, отступы между кирпичами,
+var brickRowCount = 5;
+var brickColumnCount = 5;
+var brickWidth = 75;
+var brickHeight = 20;
+var brickPadding = 10;
+var brickOffsetTop = 30;
+var brickOffsetLeft = 30;
+var score = 0;
+
+//проводить все наши кирпичи в двумерный массив
+var bricks = [];
+for(c=0; c<brickColumnCount; c++) {
+    bricks[c] = [];
+    for(r=0; r<brickRowCount; r++) {
+        bricks[c][r] = { x: 0, y: 0, status: 1 };
+    }
+}
+
+//реация на действия пользователя, клавиши управления
+
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
+
+// keyCode содержит информацию о нажатой клавиши. Код 37-это левая клавиша курсора и 39 правый курсор
+function keyDownHandler(e) {
+    if(e.keyCode == 39) {
+        rightPressed = true;
+    }
+    else if(e.keyCode == 37) {
+        leftPressed = true;
+    }
+}
+function keyUpHandler(e) {
+    if(e.keyCode == 39) {
+        rightPressed = false;
+    }
+    else if(e.keyCode == 37) {
+        leftPressed = false;
+    }
+}
+function mouseMoveHandler(e) {
+    var relativeX = e.clientX - canvas.offsetLeft;
+    if(relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX - paddleWidth/2;
+    }
+}
+//*******************************************************
+
+function collisionDetection() {
+    for(c=0; c<brickColumnCount; c++) {
+        for(r=0; r<brickRowCount; r++) {
+            var b = bricks[c][r];
+            if(b.status == 1) {
+                if(x > b.x && x < b.x+brickWidth && y > b.y && y < b.y+brickHeight) {
+                    dy = -dy;
+                    b.status = 0;
+                    score++;
+                    if(score == brickRowCount*brickColumnCount) {
+                        alert("YOU WIN, CONGRATS!");
+                        document.location.reload();
+                    }
+                }
+            }
+        }
+    }
+}
+//***************функцию, которая будет рисовать мячик на экране.
+function drawBall() {
+    ctx.beginPath();
+    ctx.arc(x, y, ballRadius, 0, Math.PI*2);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+//***********функцию, которая будет рисовать манипулятора на экране.
+function drawPaddle() {
+    ctx.beginPath();
+    ctx.rect(paddleX, canvas.height-paddleHeight, paddleWidth, paddleHeight);
+    ctx.fillStyle = "#0095DD";
+    ctx.fill();
+    ctx.closePath();
+}
+// функцию для перебора всех кирпичей в массив и рисовать их на экране.
+function drawBricks() {
+    for(c=0; c<brickColumnCount; c++) {
+        for(r=0; r<brickRowCount; r++) {
+            if(bricks[c][r].status == 1) {
+ // красим кирпичики в точке с координатами (х,у).
+                var brickX = (r*(brickWidth+brickPadding))+brickOffsetLeft;
+                var brickY = (c*(brickHeight+brickPadding))+brickOffsetTop;
+
+                bricks[c][r].x = brickX;
+                bricks[c][r].y = brickY;
+                ctx.beginPath();
+                ctx.rect(brickX, brickY, brickWidth, brickHeight);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+            }
+        }
+    }
+}
+//*************функция, чтобы создать и обновить результат отображения
+function drawScore() {
+    ctx.font = "16px Arial";
+    ctx.fillStyle = "#0095DD";
+    ctx.fillText("Score: "+score, 8, 20);
+}
+//Определить функцию рисования, который будет выполняться снова и снова, с другим набором значений переменных каждый раз менять положения спрайта и т. д
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBricks();
+    drawBall();
+    drawPaddle();
+    drawScore();
+    collisionDetection();
+
+//он отскочил от кромки путем изменения положения оси движения
+    if(x + dx > canvas.width-ballRadius || x + dx < ballRadius) {
+        dx = -dx;
+    }
+    if(y + dy < ballRadius) {
+        dy = -dy;
+    }
+    else if(y + dy > canvas.height-ballRadius) {
+        if(x > paddleX && x < paddleX + paddleWidth) {
+            dy = -dy;
+        }
+        else {
+            alert("GAME OVER");
+            document.location.reload();
+        }
+    }
+//Если стрелка влево нажата, затвор будет двигаться в 7 пикселей влево, а если вправо нажата, затвор будет двигаться 7 пикселей вправо
+
+    if(rightPressed && paddleX < canvas.width-paddleWidth) {
+        paddleX += 7;
+    }
+    else if(leftPressed && paddleX > 0) {
+        paddleX -= 7;
+    }
+//**************************************
+    x += dx;
+    y += dy;
+}
+//Благодаря бесконечной природе setInterval этой draw() функции будет вызываться каждые 10 миллисекунд всегда
+
+setInterval(draw, 10);
+
+
+  </script>
+
+<p>&nbsp;<p>
+
+<p>
+</body>
+<p>
+<center><p style="border: 3px solid #C1FF0A; background-color: #d5d5d1; padding: 10px;">Почему на сайте есть реклама? Данный сайт бесплатен только благодаря рекламе. Без рекламы команда сайта не смогла бы оплачивать хостинг и домен сайта.</center></p>
+</p>
+
+<p>&nbsp;<p>
+
+<center>
+<b>&copy; GreenPlay | Project by LeoCh</b>
+</center>
+</p>
+</html>

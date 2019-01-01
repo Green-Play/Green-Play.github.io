@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>Ball</title>
+<link type="image/png" rel="shortcut icon" href="images/iconH.png" />
+ <link href='style.css' rel='stylesheet' type='text/css'>
+<link href='knopka.css' rel='stylesheet' type='text/css'>
+<body bgcolor="#000" background="Фон.jpg">
+ <div id="header_img_Главная">
+     <a href="index.htm" Title="Главная" Target="_blank"><Img src="Сайт.jpg" Width="200" Height="150"></a>
+
+
+
+    <ul>
+        <li><a href="Главная.htm">Главная</a></li>
+        </li>
+        <li><a href="index.htm">Игры</a></li>
+        <li><a href="Комментарии.htm">Комментарии</a></li>
+        <li><a href="Пожертвовать.html">Пожертвовать</a></li>
+        <li><a href="О сайте.htm">О сайте</a></li>
+    </ul>
+    <ul class="icons">
+       <li><a href="https://vk.com/leoch3" class="icon alt fa-vk"><span class="label">VK GROUP</span></a></li>
+       <li><a href="http://vk.com/leoch2" class="icon alt fa-vk"><span class="label">VK DEVELOPER</span></a></li>
+        <li><a href="http://leoch2340@gmail.com" class="icon alt fa-gmail"><span class="label">ПОЧТА РАЗРАБОТЧИКА - leoch2340@gmail.com</span></a></li>
+</ul>
+
+<p></p>
+
+<p>&nbsp;<p>
+<center>
+<p style="font-size: 25;color: white;">
+Игра "Ball" </p>
+</center>
+<p style="font-size: 25;color: white;">
+Как играть?</p>
+<p>&nbsp;<p>
+<p style="font-size: 20;color: black;">
+Затягивательная и простая игра. Круг должнен отварачиваться от припятстий и набрирать количество очков.</p>
+<p>&nbsp;</p>
+
+</head>
+<body>
+<canvas id="canvas" style="background:#CCC"></canvas>
+
+<script>
+ (function(elid, width, height, speed, strength){
+        var canvas = document.querySelector(elid),
+                ctx = canvas.getContext("2d"),
+                pos = 0, blocks = [], curHeight = 0, mousePos, newHeight = -1;
+        canvas.width = width; canvas.height = height;ctx.fillStyle = "black";
+        var game = setInterval(function(){
+            strength+= 0.001;
+            var tetha = (strength > 0.6)? 0.6: strength;
+            if( Math.random() < tetha ) blocks.push([Math.random()*(width-10),height + 10, 10 + Math.random()*40]);
+            ctx.clearRect(0,0,width,height);
+            ctx.beginPath(); ctx.arc(pos+5,curHeight+5,5,0,2*Math.PI); ctx.fill();
+            for(var i = 0; i < blocks.length; i++){
+                ctx.fillRect(blocks[i][0],blocks[i][1],blocks[i][2], 10);
+                if( blocks[i][0] - 5 < pos && (blocks[i][0] + blocks[i][2] - 5 > pos) &&  (curHeight - blocks[i][1] < 0 && curHeight - blocks[i][1] > -15) && curHeight == newHeight)
+                newHeight = blocks[i][1]-15;
+                if( blocks[i][1] < 0 )
+                    blocks.splice( i--, 1);
+                else
+                    blocks[i][1] -= 5;
+            }
+            if (curHeight == newHeight)
+                newHeight = curHeight +=10 * ((strength > 0.6)? 0.6: strength) ;
+            if((!(curHeight = newHeight) || curHeight < -1 || curHeight > height) && clearInterval(game) == undefined )
+                alert("Game over. You have " + Math.floor(1000 * strength) + " points.");
+            pos += (Math.abs(pos - mousePos ) > 10)? (mousePos > pos) ? ((mousePos < width)? 10 : 0) : ((mousePos > 0)? -10:0) : 0;
+        }, speed);
+        document.addEventListener('mousemove', function (e) { mousePos = e.pageX; }, false);
+    })("#canvas",400,300,33,0.05);
+</script>
+<p></p>
+  <a href="Ball.html" class="nubex"<p> <center> Заново (<i>кликни</i>) </center> </p></a>
+
+<center><p style="border: 3px solid #C1FF0A; background-color: #d5d5d1; padding: 10px;">Почему на сайте есть реклама? Данный сайт бесплатен только благодаря рекламе. Без рекламы команда сайта не смогла бы оплачивать хостинг и домен сайта.</center></p>
+<p>
+<center>
+<b>&copy; GreenPlay | Project by LeoCh </b>
+</center>
+</p>
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!doctype html>
+<html>
+<html lang="en">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1251" />
+	<meta charset="UTF-8">
+	<title>2048 Game</title>
+	<link rel="stylesheet" type="text/css" href="css2048/style.css">
+ <link href='style.css' rel='stylesheet' type='text/css'>
+ <link href='knopka.css' rel='stylesheet' type='text/css'>
+</head>
+<a href="index.htm" Title="Главная" Target="_blank"><Img src="Сайт.jpg" Width="200" Height="150"></a>
+
+<ul>
+        <li><a href="index.htm">Главная</a></li>
+        <li><a href="Игры.htm">Игры</a></li>
+        <li><a href="Комментарии.htm">Комментарии</a></li>
+        <li><a href="Пожертвовать.html">Пожертвовать</a></li>
+        <li><a href="О сайте.htm">О сайте</a></li>
+    </ul>
+    <ul class="icons">
+       <li><a href="https://vk.com/leoch3" class="icon alt fa-vk"><span class="label">VK GROUP</span></a></li>
+       <li><a href="http://vk.com/leoch2" class="icon alt fa-vk"><span class="label">VK DEVELOPER</span></a></li>
+        <li><a href="http://leoch2340@gmail.com" class="icon alt fa-gmail"><span class="label">ПОЧТА РАЗРАБОТЧИКА - leoch2340@gmail.com</span></a></li>
+</ul>
+					</nav>
+
+<body>
+
+	<div class="container" id="mainVue" v-cloak>
+	    <div class="heading">
+	      <h1 class="title">2048</h1>
+	      <div class="scores-container">
+	        <div class="score-container">{{conf.score}}</div>
+	        <div class="best-container">{{conf.bestScore}}</div>
+	      </div>
+	    </div>
+
+	    <div class="above-game">
+	      <p class="game-intro">Join the numbers and get to the <strong>2048 tile!</strong> </p>
+	    <a href="Игры.htm" class="restart-button">&nbsp;Назад&nbsp;</a>
+      <p>&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;</p>
+	      <a class="restart-button" v-on="click: init">Новая игра</a>
+	      <label class='left' for="noTiles">Выберите количество плиток</label>
+
+	      <select v-on="change: changesTilesSize" v-selected="conf.size">
+	       <option value="3">3 плитки</option>
+	      	<option value="4">4 плитки</option>
+	      	<option value="5">5 плитки</option>
+	      	<option value="6">6 плики</option>
+       	<option value="7">7 плитки</option>
+       	<option value="8">8 плитки</option>
+	      </select>
+	    </div>
+
+	    <div class="game-container" v-style="width:findDimension + 'px', height: findDimension + 'px'">
+	      <div class="game-message">
+	        <p></p>
+	        <div class="lower">
+		        <a class="keep-playing-button" v-on="click: clearMessage">Keep going</a>
+	          <a class="retry-button" v-on="click: init">Try again</a>
+	        </div>
+	      </div>
+
+	      <div class="grid-container">
+	      	 <!-- Grid Here -->
+	      		<div v-repeat="grid" class="grid-row">
+					<div v-repeat="grid" class="grid-cell"></div>
+					<!-- <div v-repeat="grid" class="grid-cell" v-style="width: cellW + 'px',height: cellW + 'px'"></div> -->
+				</div>
+	      </div>
+
+	      <div class="tile-container" id="tile-container">
+
+				<!-- Component way with template inside component obj -->
+				<!-- <div v-repeat="tiles" v-component="tile"></div> -->
+
+				<!-- Component way with computed function -->
+				<div v-repeat="tiles" v-component="tile"  v-style="$transform: 'translate(' + calcStyleX + 'px,' + calcStyleY + 'px)'" class="tile tile-{{value}} tile-new{{merged ? ' tile-merged' : ''}}">
+					<div class="tile-inner">{{value}}</div>
+				</div>
+
+				<!-- Use of the directive v-style -->
+				<!-- <div v-repeat="tiles" v-style="$transform: 'scale(' + x + ')'" class="tile tile-{{value}} tile-new">
+					<div class="tile-inner">{{value}}</div>
+				</div> -->
+
+	      </div>
+
+	    </div>
+		<p class="game-explanation">
+	    <strong class="important">Как играть:</strong> Используйте <strong> клавиши ваши стрелками</strong>, чтобы переместить плитки. Когда они набирают один и тот же номер, они <strong>сливаются в одно!</strong>
+   </p>
+
+	  <hr>
+
+	  </div>
+
+	<!--<script type="text/x-template" id="grid-template">
+	    <div v-repeat="grid" class="grid-row">
+	    	<div v-repeat="grid" class="grid-cell"></div>
+	    </div>
+	</script> -->
+
+<center><p style="border: 3px solid #C1FF0A; background-color: #d5d5d1; padding: 10px;">Почему на сайте есть реклама? Данный сайт бесплатен только благодаря рекламе. Без рекламы команда сайта не смогла бы оплачивать хостинг и домен сайта.</center></p>
+
+<center>
+&copy; GreenPlay | Project by LeoCh</b>
+</center>
+
+	<script src="js2048/libs/vue.js"></script>
+	<script src="js2048/keys.js"></script>
+	<script src="js2048/store.js"></script>
+	<script src="js2048/main.js"></script>
+	<script src="//localhost:35729/livereload.js"></script>
+</body>
+</html>

@@ -1,0 +1,15 @@
+section.border button {
+color: #6496c8;
+background: rgba(0,0,0,0);
+border: solid 5px #6496c8;
+}
+section.border button:hover,
+section.border button.hover {
+border-color: #346392;
+color: #346392;
+}
+section.border button:active,
+section.border button.active {
+border-color: #27496d;
+color: #27496d;
+}

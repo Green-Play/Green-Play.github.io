@@ -1,105 +1,28 @@
-<html>
- <head>
-  <title>Тестируем PHP</title>
- </head>
- <body>
-  
-<? 
-// ----------------------------конфигурация-------------------------- // 
- 
-$adminemail="leoch2340@gmail.com";  // e-mail админа 
- 
- 
-$date=date("d.m.y"); // число.месяц.год 
- 
-$time=date("H:i"); // часы:минуты:секунды 
- 
-$backurl="https://green-play.github.io/index.html";  // На какую страничку переходит после отправки письма 
- 
-//---------------------------------------------------------------------- // 
- 
-  
- 
-// Принимаем данные с формы 
- 
-$name=$_POST['name']; 
- 
-$email=$_POST['email']; 
- 
-$msg=$_POST['message']; 
- 
-  
- 
-// Проверяем валидность e-mail 
- 
-if (!preg_match("|^([a-z0-9_\.\-]{1,20})@([a-z0-9\.\-]{1,20})\.([a-z]{2,4})|is", 
-strtolower($email))) 
- 
- { 
- 
-  echo 
-"<center>Вернитесь <a 
-href='javascript:history.back(1)'><B>назад</B></a>. Вы 
-указали неверные данные!"; 
- 
-  } 
- 
- else 
- 
- { 
- 
- 
-$msg=" 
- 
- 
-<p>Имя: $name</p> 
- 
- 
-<p>E-mail: $email</p> 
- 
- 
-<p>Сообщение: $msg</p> 
- 
- 
-"; 
- 
-  
- 
- // Отправляем письмо админу  
- 
-mail("$adminemail", "$date $time Сообщение 
-от $name", "$msg"); 
- 
-  
- 
-// Сохраняем в базу данных 
- 
-$f = fopen("message.txt", "a+"); 
- 
-fwrite($f," \n $date $time Сообщение от $name"); 
- 
-fwrite($f,"\n $msg "); 
- 
-fwrite($f,"\n ---------------"); 
- 
-fclose($f); 
- 
-  
- 
-// Выводим сообщение пользователю 
- 
-print "<script language='Javascript'><!-- 
-function reload() {location = \"$backurl\"}; setTimeout('reload()', 6000); 
-//--></script> 
- 
-$msg 
- 
-<p>Сообщение отправлено! Подождите, сейчас вы будете перенаправлены на главную страницу...</p>";  
-exit; 
- 
- } 
- 
+<?php
+
+if(isset($_POST['submit'])){
+$to = "info@epicblog.net";; // Здесь нужно написать e-mail, куда будут приходить письма
+$from = $_POST['email']; // this is the sender's Email address
+$first_name = $_POST['first_name'];
+$subject = "Форма отправки сообщений с сайта";
+$subject2 = "Copy of your form submission";
+$message = $first_name . " оставил сообщение:" . "\n\n" . $_POST['message'];
+$message2 = "Here is a copy of your message " . $first_name . "\n\n" . $_POST['message'];
+
+$headers = "From:" . $from;
+$headers2 = "From:" . $to;
+
+mail($to,$subject,$message,$headers);
+// mail($from,$subject2,$message2,$headers2); // sends a copy of the message to the sender - Отключено!
+echo "Сообщение отправлено. Спасибо Вам " . $first_name . ", мы скоро свяжемся с Вами.";
+echo "<br /><br /><a href='https://epicblog.net'>Вернуться на сайт.</a>";
+
+}
+
 ?>
-  
-   </body>
-</html>
+
+<!--Переадресация на главную страницу сайта, через 3 секунды-->
+<script language="JavaScript" type="text/javascript">
+function changeurl(){eval(self.location="https://epicblog.net/index.php");}
+window.setTimeout("changeurl();",3000);
+</script>
